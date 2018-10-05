@@ -5,11 +5,12 @@ using UnityEngine.EventSystems;
 
 public class ChairPrefab : MonoBehaviour
 {
-    private Camera mainCam;
+    //private Camera mainCam;
+    public bool taken = false;
 
 	// Use this for initialization
 	void Start () {
-        mainCam = Object.FindObjectOfType<Camera>();
+        //mainCam = Object.FindObjectOfType<Camera>();
     }
 
     // Update is called once per frame
@@ -18,11 +19,11 @@ public class ChairPrefab : MonoBehaviour
 
     }
 
-    public void OnMouseDown()
-    {
-        Debug.Log(this.gameObject.name + " Was Clicked.");
-        mainCam.transform.position = new Vector3(transform.position.x, transform.position.y+1, transform.position.z);
-        mainCam.transform.eulerAngles= new Vector3(0, 0, 0);
-        mainCam.fieldOfView = 90;
-    }
+    //public void OnMouseDown()
+    //{
+    //    Debug.Log(this.gameObject.name + " Was Clicked.");
+    //    mainCam.transform.position = new Vector3(transform.position.x, transform.position.y+1, transform.position.z);
+    //    mainCam.transform.eulerAngles= new Vector3(0, 0, 0);
+    //    mainCam.fieldOfView = 90;
+    //}
 }
