@@ -6,15 +6,21 @@ public class NPCMove : MonoBehaviour {
 
     GameObject target;
     public float speed;
+    private Renderer renderer;
     private bool seated;
+    private AudioSource cough;
+    public int coughWait;
 
 	// Use this for initialization
 	void Start () {
-        
+        coughWait = Random.Range(100000, 1000000);
+        cough = GetComponent<AudioSource>();
+        renderer = GetComponent<MeshRenderer>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        coughWait--;
         if (!seated){
             target = FindClosestChair();
             float step = speed * Time.deltaTime;
@@ -26,6 +32,12 @@ public class NPCMove : MonoBehaviour {
                 target.GetComponent<ChairPrefab>().taken = true;
                 seated = true;
             }
+        }
+        if (coughWait == 0) {
+            renderer.material.color = new Color(0, 4.45f, 4.45f);
+            cough.Play();
+            coughWait = Random.Range(10000, 1000000);
+            renderer.material.color = new Color(1, 1, 1);
         }
     }
 
