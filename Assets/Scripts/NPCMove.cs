@@ -9,7 +9,9 @@ public class NPCMove : MonoBehaviour {
     private Renderer renderer;
     private bool seated;
     private AudioSource cough;
+    public Transform Tablet;
     public int coughWait;
+    public bool tabletUser = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,7 +23,8 @@ public class NPCMove : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         coughWait--;
-        if (!seated){
+        if (!seated)
+        {
             target = FindClosestChair();
             float step = speed * Time.deltaTime;
 
@@ -32,6 +35,10 @@ public class NPCMove : MonoBehaviour {
                 target.GetComponent<ChairPrefab>().taken = true;
                 seated = true;
             }
+        }
+        else if (tabletUser){
+            Instantiate(Tablet, new Vector3(this.transform.position.x, 0.5f, this.transform.position.z + 0.2f), transform.rotation);
+            tabletUser = false;
         }
         if (coughWait == 0) {
             renderer.material.color = new Color(0, 4.45f, 4.45f);
