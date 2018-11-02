@@ -14,7 +14,7 @@ public class CameraMove : MonoBehaviour {
 	void Start () {
         mycam = GetComponent<Camera>();
         mouseLook = GetComponent<SmoothMouseLook>();
-        movie = GameObject.Find("Screen");
+        //movie = GameObject.Find("Screen");
         mouseLook.enabled = false;
         firstPick = true;
 }
