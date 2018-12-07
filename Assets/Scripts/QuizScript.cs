@@ -1,13 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuizScript : MonoBehaviour {
 
     public GameObject QuestionInput;
-    public QAClass[] QaArr;
-    public GameObject AnswerPanel;
+    public static QAClass[] QaArr;
+    //public GameObject AnswerPanel;
     public string[] questionList;
     public string[,] answerList;
     public int[] answerKey;
@@ -16,19 +23,40 @@ public class QuizScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        questionList = new string[3] { "Which one is an irrational number?", "Which Character is not in Smash?", "State Capitol of Nebraska?" };
-        answerList = new string[3,4] { { "4", "Pi", "7/12", "-328.6"},{"Bowser Jr.", "Piranha Plant", "Geno", "Zelda"}, {"Lincoln", "Osbourn", "Omaha", "Nebraska City"} };
+        Cursor.visible = true;
+
+        questionList = new string[7] {
+            "How much Caffeine is consumed yearly in Metric Tons?",
+            "What's adenosine role as explained by the video?", 
+            "Which of the following is NOT a negative of caffiene consumption?",
+            "How long is the video in question?",
+            "Did the video help answer the questions?",
+            "Was the lighting of the room an issue with the lecture?",
+            "Would you prefer online lectures in this style versus in-person lectures?"
+        };
+        answerList = new string[7,4] { 
+            {"10", "10,000", "100,000", "1,000,000"},
+            {"Produced by Caffeine", "Heartbeat Regulator", "Speeds up Brain Signals", "Causes Sleepiness"}, 
+            {"Frequent Urination", "Quicker Heart Rate", "Increased Parkinson's Risk", "Needing Higher Quantities"},
+            {"5 Minutes", "3 Minutes", "7 Minutes", "10 Minutes" },
+            {"Definitely Yes", "Mildly Yes", "No Effect", "It Was Distracting"},
+            {"Yes", "No", "No Effect", "Not Sure"},
+            {"Definitely Yes", "Mildly Yes", "Mildly No", "Definitely No"}
+        };
         answerKey = new int[3] { 2, 2, 1 };
         QaArr = new QAClass[questionList.Length + 1];
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
 
     public void SubmitAnswer() {
-        QaArr[count] = readQuestionAndAnswer(QuestionInput);
+        QaArr[count] = ReadQuestionAndAnswer(QuestionInput);
         if (count < questionList.Length)
         {
             SetNextQuestion(QuestionInput, count);
@@ -39,7 +67,13 @@ public class QuizScript : MonoBehaviour {
         }
     }
 
-    QAClass readQuestionAndAnswer(GameObject questionGroup) {
+    public IEnumerator CloseAfterTime(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Application.Quit();
+    }
+
+QAClass ReadQuestionAndAnswer(GameObject questionGroup) {
         QAClass result = new QAClass();
 
         GameObject q = questionGroup.transform.Find("Question").gameObject;
@@ -77,8 +111,68 @@ public class QuizScript : MonoBehaviour {
     void FinishQuiz(GameObject questionGroup) {
         GameObject q = questionGroup.transform.Find("Question").gameObject;
         GameObject a = questionGroup.transform.Find("Answer").gameObject;
-        q.GetComponent<Text>().text = "Thank you for your participation!";
+        q.GetComponent<Text>().text = "Thank you for your participation! Press Esc to quit.";
         a.SetActive(false);
+
+        WriteString();
+
+        //StartCoroutine(CloseAfterTime(2));
+        Application.Quit();
+    }
+
+    static void WriteString()
+    {
+        //string path = "Assets/Resources/answer.txt";
+        string path = Application.persistentDataPath + "/SurveyResults.txt";
+
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path, false);
+        writer.WriteLine("Custom Classroom = " + BuildScript.customBuilt);
+        writer.WriteLine("Seat Distance = " + ScreenVisable.dist);
+        writer.WriteLine("Screen Watch Time = " + ScreenVisable.screenTime);
+        writer.WriteLine("Screen Total Time = " + ScreenVisable.totalTime);
+        writer.WriteLine("Screen Watch Ratio = " + (float)(ScreenVisable.screenTime) / (float)(ScreenVisable.totalTime));
+
+        foreach (QAClass q in QaArr) {
+            writer.WriteLine("Question: " + q.Question);
+            writer.WriteLine("Answer: " + q.Answer);
+        }
+        writer.Close();
+
+        SendEmail("test", path);
+
+        //File.Copy(path, Application.streamingAssetsPath + "/UploadThis.txt", true);
+        //File.WriteAllText(Application.streamingAssetsPath + "/UploadThis.txt", path.)
+
+        //Re-import the file to update the reference in the editor
+        //AssetDatabase.ImportAsset(path);
+        Resources.Load(path);
+        //TextAsset asset = (TextAsset)Resources.Load("test");
+
+        //Print the text from the file
+        //Debug.Log(asset.text);
+    }
+
+    static void SendEmail(String body, String path) {
+
+        MailMessage mail = new MailMessage();
+        mail.From = new MailAddress("SquidSnacktime@gmail.com");
+        mail.To.Add("SquidSnacktime@gmail.com");
+        //mail.To.Add("qwerty526526@gmail.com");
+        //mail.To.Add("al958@scarletmail.rutgers.edu");
+        mail.Subject = "Lecture Simulator Results";
+        mail.Body = body;
+        mail.Attachments.Add(new Attachment(path));
+
+        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+        smtpServer.Port = 587;
+        smtpServer.Credentials = new System.Net.NetworkCredential("SquidSnacktime@gmail.com", "qwerty526andy526") as ICredentialsByHost;
+        smtpServer.EnableSsl = true;
+        //ServicePointManager.ServerCertificateValidationCallback =
+        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
+            return true;
+        };
+        smtpServer.Send(mail);
     }
 }
 

@@ -1,0 +1,16 @@
+Seat Distance = 7.905694
+Screen Watch Time = 682
+Screen Total Time = 1799
+Screen Watch Ratio = 0.3790995
+Question: How Engaging was the Lecture?
+Answer: Highly
+Question: How much Caffeine is consumed yearly in Metric Tons?
+Answer: 10
+Question: What's adenosine role as explained by the video?
+Answer: Produced by Caffeine
+Question: Which of the following is NOT a negative of caffiene consumption?
+Answer: Frequent Urination
+Question: How long is the video in question?
+Answer: 5 Minutes
+Question: Did the video help answer the questions?
+Answer: Definitely Yes

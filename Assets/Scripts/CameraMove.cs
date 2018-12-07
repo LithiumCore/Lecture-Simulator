@@ -24,15 +24,20 @@ public class CameraMove : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         { // if left button pressed...
             Ray ray = mycam.ScreenPointToRay(Input.mousePosition);
+            if (Cursor.visible == false) {
+                ray = new Ray(mycam.transform.position, mycam.transform.forward);
+            }
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
                 Debug.Log("You selected the " + hit.transform.name);
                 if (hit.collider.gameObject.tag == "Chair" && !seatLocked) {
+                    Cursor.visible = false;
                     //Screen.lockCursor = true;
                     if (firstPick) { 
                         movie.GetComponent<VideoPlayer>().Play();
                         movie.GetComponent<AudioSource>().Play();
+                        movie.GetComponent<ScreenVisable>().enabled = true;
                         firstPick = false;
                     }
                     mycam.transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y+1, hit.transform.position.z);

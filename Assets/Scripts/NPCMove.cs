@@ -6,7 +6,7 @@ public class NPCMove : MonoBehaviour {
 
     GameObject target;
     public float speed;
-    private Renderer renderer;
+    private Renderer rendererU;
     private bool seated;
     private AudioSource cough;
     public Transform Tablet;
@@ -17,7 +17,7 @@ public class NPCMove : MonoBehaviour {
 	void Start () {
         coughWait = Random.Range(100000, 1000000);
         cough = GetComponent<AudioSource>();
-        renderer = GetComponent<MeshRenderer>();
+        rendererU = GetComponent<MeshRenderer>();
     }
 	
 	// Update is called once per frame
@@ -41,10 +41,10 @@ public class NPCMove : MonoBehaviour {
             tabletUser = false;
         }
         if (coughWait == 0) {
-            renderer.material.color = new Color(0, 4.45f, 4.45f);
+            rendererU.material.color = new Color(0, 4.45f, 4.45f);
             cough.Play();
             coughWait = Random.Range(10000, 1000000);
-            renderer.material.color = new Color(1, 1, 1);
+            rendererU.material.color = new Color(1, 1, 1);
         }
     }
 
