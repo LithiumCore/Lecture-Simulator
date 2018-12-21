@@ -14,10 +14,17 @@ public class CameraMove : MonoBehaviour {
 	void Start () {
         mycam = GetComponent<Camera>();
         mouseLook = GetComponent<SmoothMouseLook>();
-        //movie = GameObject.Find("Screen");
+        movie = GameObject.Find("Screen");
         mouseLook.enabled = false;
         firstPick = true;
-}
+        if (MainMenuScript.uploadedVideo.Length > 0)
+        {
+            movie.GetComponent<AudioSource>().clip = null;
+            movie.GetComponent<VideoPlayer>().url = MainMenuScript.uploadedVideo;
+            movie.GetComponent<VideoPlayer>().audioOutputMode = VideoAudioOutputMode.AudioSource;
+            movie.GetComponent<VideoPlayer>().SetTargetAudioSource(0, movie.GetComponent<AudioSource>());
+        }
+    }
 
     // Update is called once per frame
     void Update() {

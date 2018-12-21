@@ -30,18 +30,18 @@ public class QuizScript : MonoBehaviour {
             "What's adenosine role as explained by the video?", 
             "Which of the following is NOT a negative of caffiene consumption?",
             "How long is the video in question?",
-            "Did the video help answer the questions?",
-            "Was the lighting of the room an issue with the lecture?",
-            "Would you prefer online lectures in this style versus in-person lectures?"
+            "Did the video help answer the questions? (Higher # meaning the video was helpful.)",
+            "Was the lighting and color of the room an issue with the lecture? (Higher # meaning it was a bigger problem.)",
+            "Would you prefer virtual lectures or in-person lectures? (Higher # meaning meaning you prefer virtual)"
         };
         answerList = new string[7,4] { 
             {"10", "10,000", "100,000", "1,000,000"},
             {"Produced by Caffeine", "Heartbeat Regulator", "Speeds up Brain Signals", "Causes Sleepiness"}, 
             {"Frequent Urination", "Quicker Heart Rate", "Increased Parkinson's Risk", "Needing Higher Quantities"},
-            {"5 Minutes", "3 Minutes", "7 Minutes", "10 Minutes" },
-            {"Definitely Yes", "Mildly Yes", "No Effect", "It Was Distracting"},
-            {"Yes", "No", "No Effect", "Not Sure"},
-            {"Definitely Yes", "Mildly Yes", "Mildly No", "Definitely No"}
+            {"3 Minutes", "5 Minutes", "7 Minutes", "10 Minutes"},
+            {"1", "2", "3", "4"},
+            {"1", "2", "3", "4"},
+            {"1", "2", "3", "4"}
         };
         answerKey = new int[3] { 2, 2, 1 };
         QaArr = new QAClass[questionList.Length + 1];
